@@ -28,4 +28,22 @@ module WebMocks
     stub_request(:get, %r{weather-alerts\.com\/api\?zip_code=30000})
       .and_return(status: 200, body: body)
   end
+
+  def stub_webhook_warning(url)
+    body = {
+        message: 'message_received'
+    }.to_json
+
+    stub_request(:post, url)
+        .and_return(body: body, status: 200)
+  end
+
+  def stub_webhook_watch(url)
+    body = {
+        message: 'message_received'
+    }.to_json
+
+    stub_request(:post, url)
+        .and_return(body: body, status: 200)
+  end
 end
