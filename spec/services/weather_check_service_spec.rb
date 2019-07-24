@@ -18,9 +18,9 @@ describe WeatherCheckService do
       WeatherCheckService.call
     end
 
-    let(:url1) { 'https://weather-alerts.com/api?zip_code=10000' }
-    let(:url2) { 'https://weather-alerts.com/api?zip_code=20000' }
-    let(:url3) { 'https://weather-alerts.com/api?zip_code=30000' }
+    let(:url1) { 'http://weather-alerts.com/api?zip_code=10000' }
+    let(:url2) { 'http://weather-alerts.com/api?zip_code=20000' }
+    let(:url3) { 'http://weather-alerts.com/api?zip_code=30000' }
 
     it 'makes calls for all zip codes' do
       subject
@@ -36,7 +36,7 @@ describe WeatherCheckService do
   end
 
   describe 'make_get_request' do
-    let(:url) { 'https://weather-alerts.com/api?zip_code=10000' }
+    let(:url) { 'http://weather-alerts.com/api?zip_code=10000' }
     subject do
       WeatherCheckService.make_get_request(url)
     end
@@ -52,19 +52,21 @@ describe WeatherCheckService do
 
   describe 'check_responses' do
     context 'valid responses' do
+      let!(:warning_webhook) { create(:warning_webhook) }
+      let!(:watch_webhook) { create(:watch_webhook) }
       #need to mock the below as faraday response objects
-      let(:response1) { "{\"zip_code\":\"10000\",\"status\":\"quiet\"}" }
-      let(:response2) { "{\"zip_code\":\"20000\",\"status\":\"watch\"}" }
-      let(:response3) { "{\"zip_code\":\"30000\",\"status\":\"warning\"}" }
-      let(:responses) { [:response1, :response2, :response3] }
+      let(:response1) { OpenStruct.new(:body => "{\"zip_code\":\"10000\",\"status\":\"quiet\"}") }
+      let(:response2) { OpenStruct.new(:body => "{\"zip_code\":\"20000\",\"status\":\"watch\"}") }
+      let(:response3) { OpenStruct.new(:body => "{\"zip_code\":\"30000\",\"status\":\"warning\"}") }
+      let(:responses) { [response1, response2, response3] }
 
       subject do
         WeatherCheckService.check_responses(responses)
       end
 
-      xit 'calls spawn_workers twice' do
-        subject
+      it 'calls spawn_workers twice' do
         expect(WeatherCheckService).to receive(:spawn_worker).twice
+        subject
       end
     end
 

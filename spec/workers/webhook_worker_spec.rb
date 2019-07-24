@@ -14,7 +14,8 @@ RSpec.describe WebhookWorker, type: :worker do
 
   describe 'record_event' do
     subject do
-      WebhookWorker.record_event(response, status, webhook_id)
+      wh_worker = WebhookWorker.new
+      wh_worker.record_event(response, status, webhook_id)
     end
 
     context 'there is no associated webhook' do
@@ -61,7 +62,8 @@ RSpec.describe WebhookWorker, type: :worker do
     let(:valid_payload) { { name: name, zip: zip } }
 
     it 'creates a payload' do
-      allow(WebhookWorker).to receive(:create_payload).with(name, zip).and_return(valid_payload)
+      wh_worker = WebhookWorker.new
+      allow(wh_worker).to receive(:create_payload).with(name, zip).and_return(valid_payload)
     end
   end
 
@@ -74,7 +76,8 @@ RSpec.describe WebhookWorker, type: :worker do
     end
 
     subject do
-      WebhookWorker.make_webhook_request(webhook, payload)
+      wh_worker = WebhookWorker.new
+      wh_worker.make_webhook_request(webhook, payload)
     end
 
     it 'makes a post' do

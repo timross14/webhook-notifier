@@ -2,7 +2,7 @@ require 'faraday'
 require 'json'
 
 ZIP_CODES = [10000, 20000, 30000]
-BASE_URL = 'https://weather-alerts.com/api'
+BASE_URL = 'http://weather-alerts.com/api'
 
 class WeatherCheckService
   def self.call
