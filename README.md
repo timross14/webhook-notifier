@@ -1,12 +1,12 @@
 # Notifier
 
 ###Known Issues/Possible Improvements
-- Need better handling of errors in API returns
+- Need better handling of errors and testing of API returns
 - Should research if there is a worker gem that is more built for our use case, Sidekiq needs manipulating to queue quickly
 - Possibly parallelize our GET of weather status, as we scale up the amount of zip codes
 - Need to manually test if sidekiq jobs are working
 
-###To Run
+###To Run Tests
 `bundle install && bundle exec rspec`
 
 _Notifier_ app monitors the weather in your area and will notify you when

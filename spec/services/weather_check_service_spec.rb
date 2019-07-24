@@ -37,11 +37,39 @@ describe WeatherCheckService do
 
   describe 'make_get_request' do
     let(:url) { 'https://weather-alerts.com/api?zip_code=10000' }
-    before do
+    subject do
       WeatherCheckService.make_get_request(url)
     end
     it 'calls the api' do
+      subject
       expect(a_request(:get, url)).to have_been_made.once
+    end
+
+    it 'returns a faraday response' do
+      expect(subject).to be_an_instance_of(Faraday::Response)
+    end
+  end
+
+  describe 'check_responses' do
+    context 'valid responses' do
+      #need to mock the below as faraday response objects
+      let(:response1) { "{\"zip_code\":\"10000\",\"status\":\"quiet\"}" }
+      let(:response2) { "{\"zip_code\":\"20000\",\"status\":\"watch\"}" }
+      let(:response3) { "{\"zip_code\":\"30000\",\"status\":\"warning\"}" }
+      let(:responses) { [:response1, :response2, :response3] }
+
+      subject do
+        WeatherCheckService.check_responses(responses)
+      end
+
+      xit 'calls spawn_workers twice' do
+        subject
+        expect(WeatherCheckService).to receive(:spawn_worker).twice
+      end
+    end
+
+    context 'invalid responses' do
+      #need to test and handle more here
     end
   end
 end

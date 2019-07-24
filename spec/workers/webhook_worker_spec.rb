@@ -84,29 +84,15 @@ RSpec.describe WebhookWorker, type: :worker do
   end
 
   describe 'perform' do
-    let(:payload) { { name: name, zip: zip } }
     let(:webhook) { create(:warning_webhook) }
-
-    before do
-      stub_webhook_warning(url)
-    end
 
     subject do
       WebhookWorker.perform_async(webhook)
     end
 
-    context 'there is a webhook' do
-
-      it 'queues a job' do
-        subject
-        expect(WebhookWorker.jobs.size).to eq(1)
-      end
-    end
-
-    context 'there is not a webhook' do
-      let(:webhook) { nil }
-
-      #it will queue but return right away
+    it 'queues a job' do
+      subject
+      expect(WebhookWorker.jobs.size).to eq(1)
     end
   end
 end
