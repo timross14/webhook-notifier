@@ -63,8 +63,6 @@ RSpec.describe WebhookWorker, type: :worker do
     it 'creates a payload' do
       allow(WebhookWorker).to receive(:create_payload).with(name, zip).and_return(valid_payload)
     end
-
-    xit 'handles an invalid payload'
   end
 
   describe 'make_webhook_request' do

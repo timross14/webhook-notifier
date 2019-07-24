@@ -5,10 +5,6 @@ ZIP_CODES = [10000, 20000, 30000]
 BASE_URL = 'https://weather-alerts.com/api'
 
 class WeatherCheckService
-
-  #need to poll every period here
-
-  #implement sidekiq here to make these parallel?
   def self.call
     responses = []
     ZIP_CODES.each do |zip|
@@ -27,7 +23,7 @@ class WeatherCheckService
   def self.check_responses(responses)
     webhooks = Webhook.where("name = ? OR name = ?", 'watch', 'warning') #if we add relevant names in the future, we can add them here
     responses.each do |r|
-      parsed_response = JSON.parse(r.body)
+      parsed_response = JSON.parse(r.body) if r.body
       status = parsed_response['status']
       zip = parsed_response['zip_code']
       webhooks.each do |webhook|
