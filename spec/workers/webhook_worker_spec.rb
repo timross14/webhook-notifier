@@ -37,6 +37,24 @@ RSpec.describe WebhookWorker, type: :worker do
         expect(event.response).to eq(response)
       end
     end
+
+    context 'the webhook returns an error' do
+      let!(:webhook) { create(:warning_webhook) }
+      let(:response) { nil }
+      let(:status) { '404' }
+
+      it 'creates an event' do
+        expect { subject }.to change { WebhookEvent.count }.from(0).to(1)
+      end
+
+      it 'creates webhook event with proper values' do
+        subject
+        event = WebhookEvent.first
+        expect(event.webhook_id).to eq(webhook_id)
+        expect(event.status).to eq(status)
+        expect(event.response).to eq(response)
+      end
+    end
   end
 
   describe 'create_payload' do

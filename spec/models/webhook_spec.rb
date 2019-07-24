@@ -10,6 +10,18 @@ RSpec.describe Webhook, type: :model do
     it { is_expected.to validate_presence_of(:zip_code) }
     it { is_expected.to validate_presence_of(:name) }
     it { is_expected.to validate_inclusion_of(:name).in_array(['watch', 'warning']) }
+
+    context 'bad url input' do
+      let(:webhook) { build(:warning_webhook, url: 'not a url') }
+      it 'is not valid' do
+        expect(webhook).to_not be_valid
+      end
+
+      it 'returns a message' do
+        webhook.valid?
+        expect(webhook.errors[:url]).to eq(['must be a valid url'])
+      end
+    end
   end
 
   describe 'associations' do

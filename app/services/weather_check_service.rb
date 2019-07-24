@@ -2,7 +2,6 @@ require 'faraday'
 require 'json'
 
 ZIP_CODES = [10000, 20000, 30000]
-POLLING_PERIOD_SECS = 5
 BASE_URL = 'https://weather-alerts.com/api'
 
 class WeatherCheckService
@@ -21,7 +20,7 @@ class WeatherCheckService
 
   def self.make_get_request(url)
     Faraday.get(url) do |req|
-      req.headers['Content-Type'] = 'application/json' #faraday can implement parallelization
+      req.headers['Content-Type'] = 'application/json' #faraday can implement parallelization (Typhoeus)
     end
   end
 
